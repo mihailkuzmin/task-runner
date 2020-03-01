@@ -9,15 +9,29 @@ const fs = require('fs')
 class PythonRunner {
   async runProgram(programText) {
     const filePath = await this._createInputFile(programText)
-    const result = await this._run(filePath)
+    const { stderr, stdout } = await this._run(filePath)
 
-    return result
+    if (stderr) {
+      return {
+        ok: false,
+        error: stderr,
+      }
+    }
+
+    return {
+      ok: true,
+      result: stdout,
+    }
   }
 
   async _run(filePath) {
-    const result = await exec(`python3 ${filePath}`)
-
-    return result.stdout
+    try {
+      const { stdout, stderr } = await exec(`python3 ${filePath}`)
+      return { stdout, stderr }
+    } catch (e) {
+      const { stdout, stderr } = e
+      return { stdout, stderr }
+    }
   }
 
   async _createInputFile(programText) {

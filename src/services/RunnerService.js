@@ -19,9 +19,7 @@ class RunnerService {
   async runTask(programText) {
     const result = await this.runner.runProgram(programText)
 
-    return {
-      output: `${result}`,
-    }
+    return result
   }
 }
 
