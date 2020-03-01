@@ -38,10 +38,7 @@ class PascalRunner {
 
   async _createInputFile(programText) {
     const fileName = `${Date.now()}.pas`
-    const filePath = `${path.resolve(
-      __dirname,
-      '../../temp/pascal'
-    )}/${fileName}`
+    const filePath = `${path.resolve(__dirname, '../temp/pascal')}/${fileName}`
 
     await fs.promises.writeFile(`${filePath}`, programText)
     return filePath
