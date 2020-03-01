@@ -1,6 +1,8 @@
 /** @format */
 
-const cp = require('child-process-promise')
+const util = require('util')
+const cp = require('child_process')
+const exec = util.promisify(cp.exec)
 const path = require('path')
 const fs = require('fs')
 
@@ -14,13 +16,13 @@ class PascalRunner {
   }
 
   async _compileProgram(sourceFilePath) {
-    await cp.exec(`pabcnetc ${sourceFilePath}`)
+    await exec(`pabcnetc ${sourceFilePath}`)
     const filePath = this._getCompiledFilePath(sourceFilePath)
     return filePath
   }
 
   async _run(compiledFilePath) {
-    const result = await cp.exec(`mono ${compiledFilePath}`)
+    const result = await exec(`mono ${compiledFilePath}`)
 
     return result.stdout
   }
