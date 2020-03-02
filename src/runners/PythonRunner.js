@@ -36,10 +36,22 @@ class PythonRunner {
 
   async _createInputFile(programText) {
     const fileName = `${Date.now()}.py`
-    const filePath = `${path.resolve(__dirname, '../temp/python')}/${fileName}`
+    const dirPath = path.resolve(__dirname, '../temp/python')
+    const filePath = `${dirPath}/${fileName}`
 
-    await fs.promises.writeFile(`${filePath}`, programText)
-    return filePath
+    try {
+      await fs.promises.writeFile(`${filePath}`, programText)
+      return filePath
+    } catch (e) {
+      const notExists = e.code === 'ENOENT'
+      if (notExists) {
+        await fs.promises.mkdir(dirPath)
+        await fs.promises.writeFile(`${filePath}`, programText)
+        return filePath
+      }
+
+      return e
+    }
   }
 }
 

@@ -10,9 +10,19 @@ class PascalRunner {
   async runProgram(programText) {
     const filePath = await this._createInputFile(programText)
     const compiledFilePath = await this._compileProgram(filePath)
-    const result = await this._run(compiledFilePath)
+    const { stderr, stdout } = await this._run(compiledFilePath)
 
-    return result
+    if (stderr) {
+      return {
+        ok: false,
+        error: stderr,
+      }
+    }
+
+    return {
+      ok: true,
+      result: stdout,
+    }
   }
 
   async _compileProgram(sourceFilePath) {
@@ -22,9 +32,9 @@ class PascalRunner {
   }
 
   async _run(compiledFilePath) {
-    const result = await exec(`mono ${compiledFilePath}`)
+    const {stdout, stderr} = await exec(`mono ${compiledFilePath}`)
 
-    return result.stdout
+    return {stdout, stderr}
   }
 
   _getCompiledFilePath(sourceFilePath) {
@@ -38,10 +48,22 @@ class PascalRunner {
 
   async _createInputFile(programText) {
     const fileName = `${Date.now()}.pas`
-    const filePath = `${path.resolve(__dirname, '../temp/pascal')}/${fileName}`
+    const dirPath = path.resolve(__dirname, '../temp/pascal')
+    const filePath = `${dirPath}/${fileName}`
 
-    await fs.promises.writeFile(`${filePath}`, programText)
-    return filePath
+    try {
+      await fs.promises.writeFile(`${filePath}`, programText)
+      return filePath
+    } catch (e) {
+      const notExists = e.code === 'ENOENT'
+      if (notExists) {
+        await fs.promises.mkdir(dirPath)
+        await fs.promises.writeFile(`${filePath}`, programText)
+        return filePath
+      }
+
+      return e
+    }
   }
 }
 
