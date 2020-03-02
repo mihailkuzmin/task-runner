@@ -20,7 +20,7 @@ class PythonRunner {
 
     return {
       ok: true,
-      result: stdout,
+      output: stdout,
     }
   }
 
