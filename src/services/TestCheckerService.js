@@ -1,3 +1,5 @@
+/** @format */
+
 const fs = require('fs')
 const path = require('path')
 
@@ -6,7 +8,7 @@ class TestCheckerService {
     const testOutput = await this._getTestOutput(taskId)
     return {
       passed: output === testOutput,
-      testOutput
+      testOutput,
     }
   }
 
@@ -18,4 +20,4 @@ class TestCheckerService {
   }
 }
 
-module.exports = TestCheckerService
+module.exports = { TestCheckerService }

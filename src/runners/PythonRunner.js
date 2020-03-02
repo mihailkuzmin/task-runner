@@ -55,4 +55,4 @@ class PythonRunner {
   }
 }
 
-module.exports = PythonRunner
+module.exports = { PythonRunner }

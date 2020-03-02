@@ -32,9 +32,9 @@ class PascalRunner {
   }
 
   async _run(compiledFilePath) {
-    const {stdout, stderr} = await exec(`mono ${compiledFilePath}`)
+    const { stdout, stderr } = await exec(`mono ${compiledFilePath}`)
 
-    return {stdout, stderr}
+    return { stdout, stderr }
   }
 
   _getCompiledFilePath(sourceFilePath) {
@@ -67,4 +67,4 @@ class PascalRunner {
   }
 }
 
-module.exports = PascalRunner
+module.exports = { PascalRunner }
