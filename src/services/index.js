@@ -1,9 +1,9 @@
 /** @format */
 
-const { RunnerService } = require('./RunnerService')
+const { CodeExecutionService } = require('./CodeExecutionService')
 const { TestCheckerService } = require('./TestCheckerService')
 
 module.exports = {
-  RunnerService,
+  CodeExecutionService,
   TestCheckerService,
 }

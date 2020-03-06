@@ -1,19 +1,20 @@
 /** @format */
 
 const router = require('express').Router()
-const Runners = require('./runners')
-const { RunnerService } = require('./services')
+const RunnersList = require('./runners')
+const { CodeExecutionService, TestCheckerService } = require('./services')
 
 router.post('/process', async (req, res) => {
   try {
     const { language, programText, taskId } = req.body
-    const runner = new RunnerService(Runners, language, taskId)
 
-    const result = await runner.runTask(programText)
+    const runner = new CodeExecutionService(RunnersList, TestCheckerService)
+    const result = await runner.runTask({ language, programText, taskId })
 
     res.send(result)
   } catch (e) {
     res.status(500).send({
+      ok: false,
       error: 'Internal server error',
     })
   }
@@ -21,18 +22,15 @@ router.post('/process', async (req, res) => {
 
 router.post('/processAll', async (req, res) => {
   try {
-    const { programs } = req.body
+    const { tasks } = req.body
 
-    const tasks = programs.map(({ language, programText, taskId }) => {
-      const runner = new RunnerService(Runners, language, taskId)
-      return runner.runTask(programText)
-    })
-
-    const result = await Promise.all(tasks)
+    const runner = new CodeExecutionService(RunnersList, TestCheckerService)
+    const result = await runner.runTasks(tasks)
 
     res.send(result)
   } catch (e) {
     res.status(500).send({
+      ok: false,
       error: 'Internal server error',
     })
   }
