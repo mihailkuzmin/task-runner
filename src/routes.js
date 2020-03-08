@@ -36,4 +36,18 @@ router.post('/processAll', async (req, res) => {
   }
 })
 
+router.get('/availableLanguages', (req, res) => {
+  try {
+    const runner = new CodeExecutionService(RunnersList, TestCheckerService)
+    const result = runner.getAvailableLanguages()
+
+    res.send(result)
+  } catch (e) {
+    res.status(500).send({
+      ok: false,
+      error: 'Internal server error',
+    })
+  }
+})
+
 module.exports = router
