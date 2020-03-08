@@ -38,6 +38,11 @@ class CodeExecutionService {
     const runner = new Runner()
     return runner
   }
+
+  getAvailableLanguages() {
+    const languages = Object.keys(this._Runners)
+    return languages
+  }
 }
 
 module.exports = { CodeExecutionService }
